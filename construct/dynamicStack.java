@@ -18,7 +18,7 @@ public class dynamicStack extends stack{
     }
 
     @Override
-    public void push(int data){
+    public void push(int data) throws Exception{
         if (super.size() == super.Capacity()){
             int n = super.size();
             int temp[] = new int[n];
