@@ -35,7 +35,7 @@ public class stack {
     protected void StackEmptyException() throws Exception {
         if (this.noOfElements == 0) throw new Exception("StackIsEmpty");
     }
-    protected void StackOverflow() throws Exception {
+    protected void StackOverflowException() throws Exception {
         if (this.noOfElements == this.maxCapacity) throw new Exception("StackOverflow");
     }
 
@@ -46,7 +46,7 @@ public class stack {
     }
 
     public void push(int data) throws Exception {
-        StackOverflow();
+        StackOverflowException();
         push_(data);
     }
 
