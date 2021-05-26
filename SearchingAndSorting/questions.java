@@ -54,7 +54,7 @@ public class questions{
         return new int[] {firstIndex(nums,target),lastIndex(nums,target)};
     }
 
-    // saerch Or Insert With Unique Elements
+    // saerch Or Insert With Unique Elements - Leetcode 35
     public int saerchOrInsertWithUniqueElements(int[] arr, int data){
         int n = arr.length, si = 0, ei = n -1;
 
@@ -66,5 +66,38 @@ public class questions{
         }
         
         return si;
+    }
+
+    // search or insert with duplicate elements
+    public int searchOrInsertWithDuplicateElements(int[] arr, int data){
+        int n = arr.length, si = 0, ei = n - 1;
+        
+        while(si <= ei){
+            int mid = (si + ei)/2;
+
+            if (arr[mid] < data) si = mid + 1;
+            else ei = mid - 1;
+        }
+
+        return (si - 1 >= 0 && arr[si - 1] == data) ? si - 1 : si;
+    }
+
+    // nearest element
+    public int nearestElement(int[] arr, int data){
+        if (arr.length == 0) return 0;
+
+        int n = arr.length;
+        if (arr[0] >= data || arr[n-1] <= data) return arr[0] >= data ? 0 : arr[n - 1];
+
+        int ei = n - 1, si = 0;
+        while(si <= ei){
+            int mid = (si+ei)/2;
+
+            if (arr[mid] <= data) si = mid + 1;
+            else ei = mid - 1;
+        }
+
+        return data - arr[ei] < arr[si] - data ? arr[ei] : arr[si];
+        // return data - arr[ei] < arr[si] - data ? ei : si; if index is needed
     }
 }
