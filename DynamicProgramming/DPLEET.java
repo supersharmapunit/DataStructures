@@ -311,6 +311,65 @@ public class DPLEET {
         print1D(dp);
     }
 
+    // Leetcode 53
+    public int maxSubArray(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n+1];
+        
+        for (int i = n-1; i >= 0; i--){
+         dp[i] = nums[i] + Math.max(dp[i + 1], 0);
+     }
+        
+        int ans = Integer.MIN_VALUE;
+        for (int i  = 0; i < n; i++){
+            ans = Math.max(dp[i], ans);
+        }
+        return ans;
+    }
+
+    // Leetcode 53 space optimised
+    public int maxSubArraySpaceOpti(int[] nums) {
+        int n = nums.length;
+        int ans = Integer.MIN_VALUE;
+        int nextMax = 0;
+        
+        for (int i = n-1; i >= 0; i--){
+         int currMax = nums[i] + Math.max(nextMax, 0);
+         ans = Math.max(ans,currMax);
+         nextMax = currMax;
+     }
+        return ans;
+    }
+
+    // Leetcode 1314
+    public int[][] matrixBlockSum(int[][] mat, int k) {
+        int n = mat.length, m = mat[0].length;
+        int[][] ans = new int[n][m];
+        int[][] dp = new int[n+1][m+1]; // 1-based indexing <-- prefix sums,˘
+        
+        // compute the prefix sums
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= m; j++) {
+                dp[i][j] = mat[i-1][j-1] + dp[i][j-1] + dp[i-1][j] - dp[i-1][j-1];
+            }
+        }
+        
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                // compute the ans for (i,j)
+                int i1 = Math.max(0, i-k), j1 = Math.max(0,j-k);
+                int i2 = Math.min(n-1, i+k), j2 = Math.min(m-1, j+k);
+                i1++;
+                i2++;
+                j1++; 
+                j2++; //1-based indexing
+               
+                ans[i][j] = dp[i2][j2] - dp[i2][j1-1] - dp[i1-1][j2] + dp[i1-1][j1-1];
+            }
+        }
+        return ans;
+    }
+
     
     
 

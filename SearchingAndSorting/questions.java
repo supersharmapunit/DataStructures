@@ -1,4 +1,5 @@
 public class questions{
+    
     public int binarySearch(int[] arr, int data){
         int n = arr.length, int si = 0, ei = n -1;
 
@@ -17,6 +18,19 @@ public class questions{
         int n = arr.length, si = 0, ei = n - 1;
         while (si <= ei) {
             int mid = (si + ei) / 2;
+            if (arr[mid] < data)
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+
+        return (si <= n -1 && arr[si] == data) ? si : -1;
+    }
+
+    public int firstIndex01(int[] arr, int data) {
+        int n = arr.length, si = 0, ei = n - 1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
             if (arr[mid] == data) {
                 if (mid - 1 >= 0 && arr[mid - 1] == data)
                     ei = mid - 1;
@@ -31,23 +45,38 @@ public class questions{
         return -1;
     }
 
+
     public int lastIndex(int[] arr, int data) {
         int n = arr.length, si = 0, ei = n - 1;
-        while (si <= ei) {
-            int mid = (si + ei) / 2;
-            if (arr[mid] == data) {
-                if (mid + 1 < n && arr[mid + 1] == data)
+            while (si <= ei) {
+                int mid = (si + ei) / 2;
+                if (arr[mid] <= data)
                     si = mid + 1;
                 else
-                    return mid;
-            } else if (arr[mid] < data)
-                si = mid + 1;
-            else
-                ei = mid - 1;
-        }
+                    ei = mid - 1;
+            }
+            si--;
+    
+            return (si >= 0 && arr[si] == data) ? si : -1;
+        
 
-        return -1;
-    }
+    public int lastIndex01(int[] arr, int data) {
+        int n = arr.length, si = 0, ei = n - 1;
+            while (si <= ei) {
+                int mid = (si + ei) / 2;
+                if (arr[mid] == data) {
+                    if (mid + 1 < n && arr[mid + 1] == data)
+                        si = mid + 1;
+                    else
+                        return mid;
+                } else if (arr[mid] < data)
+                    si = mid + 1;
+                else
+                    ei = mid - 1;
+            }
+    
+            return -1;
+        }
 
     // Leetcode 34
     public int[] searchRange(int[] nums, int target) {
@@ -99,5 +128,22 @@ public class questions{
 
         return data - arr[ei] < arr[si] - data ? arr[ei] : arr[si];
         // return data - arr[ei] < arr[si] - data ? ei : si; if index is needed
+    }
+
+    // Leetcode 74
+    public boolean searchMatrix(int[][] matrix, int target) {
+     int n = matrix.length, m = matrix[0].length, si = 0, ei = (n*m) - 1;
+     
+     while(si <= ei){
+         int mid = (si+ei)/2;
+
+         int r = mid/m, c = mid %m;
+
+         if (matrix[r][c] == target) return true;
+         else if (matrix[r][c] < target) si = mid + 1;
+         else ei = mid - 1;
+     }
+
+     return false;
     }
 }
