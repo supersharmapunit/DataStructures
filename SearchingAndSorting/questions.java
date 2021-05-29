@@ -1,7 +1,7 @@
-public class questions{
+public class Questions{
     
     public int binarySearch(int[] arr, int data){
-        int n = arr.length, int si = 0, ei = n -1;
+        int n = arr.length,  si = 0, ei = n -1;
 
         while(si <= ei){
             int mid = (ei - si)/2;
@@ -58,6 +58,7 @@ public class questions{
             si--;
     
             return (si >= 0 && arr[si] == data) ? si : -1;
+    }
         
 
     public int lastIndex01(int[] arr, int data) {
@@ -145,5 +146,45 @@ public class questions{
      }
 
      return false;
+    }
+
+    // Leetcode 34
+    public int search(int[] arr, int data) {
+        int n = arr.length, si = 0, ei = n - 1;
+        
+        while(si <= ei){
+            int mid = (si+ei)/2;
+            
+            if (arr[mid] == data) return mid;
+            else if(arr[si] <= arr[mid]){
+                if (arr[si] <= data && data < arr[mid]) ei = mid - 1;
+                else si = mid +1;
+            } else {
+                if (arr[mid] < data && data <= arr[ei]) si = mid +1;
+                else ei = mid -1;
+            }
+        }
+        return -1;
+    }
+
+    // Leetcode 81
+    public boolean searchWithDuplicates(int[] nums, int target) {
+        int n = arr.length, si = 0, ei = n - 1;
+
+        while(si <= ei){
+            int mid = (si+ei)/2;
+
+            if (arr[mid] == data || arr[si] == data) return true;
+            else if(arr[si] < arr[mid]){
+                if (arr[si] <= data && data < arr[mid]) ei = mid - 1;
+                else si = mid +1;
+            } else if (arr[mid] < arr[ei]) {
+                if (arr[mid] < data && data <= arr[ei]) si = mid +1;
+                else ei = mid -1;
+            } else 
+                si++;
+
+        }
+        return false;
     }
 }
