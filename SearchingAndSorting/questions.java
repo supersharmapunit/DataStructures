@@ -1,5 +1,11 @@
 public class Questions{
     
+    public void swap(int[] arr, int i , int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+    
     public int binarySearch(int[] arr, int data){
         int n = arr.length,  si = 0, ei = n -1;
 
@@ -84,7 +90,7 @@ public class Questions{
         return new int[] {firstIndex(nums,target),lastIndex(nums,target)};
     }
 
-    // saerch Or Insert With Unique Elements - Leetcode 35 - https://leetcode.com/problems/search-insert-position/
+    // Leetcode 35 - saerch Or Insert With Unique Elements-  https://leetcode.com/problems/search-insert-position/
     public int saerchOrInsertWithUniqueElements(int[] arr, int data){
         int n = arr.length, si = 0, ei = n -1;
 
@@ -168,7 +174,7 @@ public class Questions{
     }
 
     // Leetcode 81 - https://leetcode.com/problems/search-in-rotated-sorted-array-ii/
-    public boolean searchWithDuplicates(int[] nums, int target) {
+    public boolean searchWithDuplicates(int[] arr, int data) {
         int n = arr.length, si = 0, ei = n - 1;
 
         while(si <= ei){
@@ -209,7 +215,7 @@ public class Questions{
         while (si < ei) {
             int sum = arr[si] + arr[ei];
             if (sum == target) {
-                ArrayList<Integer> smallAns = new ArrayList<>();
+                List<Integer> smallAns = new ArrayList<>();
                 smallAns.add(arr[si]);
                 smallAns.add(arr[ei]);
                 ans.add(smallAns);
@@ -284,5 +290,67 @@ public class Questions{
 
         return count;
     }
+
+    // leetcode count -ves
+    public int count(int[][] arr){
+        int n = arr.length, m = arr[0].length, si = -1, itr = 0, count = 0;
+        while (itr < (n*m) -1){
+            if(arr[itr/m][itr%m] < 0){
+                int temp = arr[itr/m][itr%m];
+                si++;
+                arr[itr/m][itr%m] = arr[si/m][si%m];
+                arr[si/m][si%m] = temp;
+                count++;
+
+            }
+            itr++;
+        }
+        return count - 1;
+    }
+
+    // Leetcode 658 - https://leetcode.com/problems/find-k-closest-elements/
+    public int insertIdx(int[] arr, int data){
+        int n = arr.length, si = 0, ei = n - 1;
+
+        while(si <= ei){
+            int mid = (si+ei)/2;
+
+            if (arr[mid] <= data) si = mid +1;
+            else ei = mid - 1;
+        }
+
+        return si;
+    }
+
+    //  NOTE --unfinished 658
+
+    // leetcode 875 - https://leetcode.com/problems/koko-eating-bananas/
+    public int minEatingSpeed(int[] piles, int h) {
+        int si = 1, ei = (int)1e9;
+        
+        while(si < ei){
+            int eatingSpeed = (si + ei)/2;
+            
+            if(!isPossibleToEat(piles, eatingSpeed, h))
+                si = eatingSpeed + 1;
+            else 
+                ei = eatingSpeed;
+        }
+        return si;
+    }
+    
+    public boolean isPossibleToEat(int[] arr, int eatingSpeed, int hrsG){ //hrsG - hrs given to finish
+        int hrsR = 0, n = arr.length; // hours  required to finish all the bananas
+        
+        for (int i = 0;i < n; i++){
+            hrsR += Math.ceil(arr[i] / (eatingSpeed * 1.0));
+            
+            if (hrsR > hrsG) return false;
+            }
+        return true;
+    }
+
+    
+    // Leetcode MaxAreaToServeCake - https://leetcode.com/discuss/interview-question/348510/Google-or-Online-Assessment-or-Maximum-Area-Serving-Cake
 
 }

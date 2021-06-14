@@ -1,8 +1,5 @@
 import java.util.Arrays;
 
-import jdk.javadoc.internal.doclets.formats.html.FrameOutputWriter;
-import jdk.jfr.Frequency;
-
 public class Questions {
 
     public void swap(int[] arr, int i, int j) {
