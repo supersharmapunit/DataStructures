@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Questions {
     // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
 
@@ -40,7 +42,7 @@ public class Questions {
 
     // https://practice.geeksforgeeks.org/problems/special-matrix4201/1
     // will give TLE here but it will be solved using DP
-    public int FindWays(int n, int m, int[][] arr) {
+    public static int FindWays(int n, int m, int[][] arr) {
         int vis[][] = new int[n + 1][m + 1];
         for (int[] ele : arr)
             vis[ele[0]][ele[1]] = 1;
@@ -54,21 +56,21 @@ public class Questions {
     }
 
     // https://www.geeksforgeeks.org/rat-in-a-maze-with-multiple-steps-jump-allowed/?ref=rp
-    public void display1D(int[] arr) {
+    public static void display1D(int[] arr) {
         for (int ele : arr)
             System.out.print(ele + " ");
 
         System.out.println();
     }
 
-    public void display2D(int[][] arr) {
+    public static void display2D(int[][] arr) {
         for (int ele : arr)
             display1D(a);
 
         System.out.println();
     }
 
-    public int ratInMazeWithJumps(int sr, int sc, int[][] jumpMat, int[][] dir, int[][] ans) {
+    public static int ratInMazeWithJumps(int sr, int sc, int[][] jumpMat, int[][] dir, int[][] ans) {
         int n = jumpMat.length, m = jumpMat[0].length;
         if (sr == n - 1 && sc == m - 1) {
             ans[sr][sc] = 1;
@@ -100,26 +102,28 @@ public class Questions {
         return count;
     }
 
-    public int longestPath(int sr, int sc, int[][] arr, String ans, String psf, boolean[][] visited, int[][] dir, String[] dirS){
+    public static int longestPath(int sr, int sc, int[][] arr, String ans, String psf, boolean[][] visited, int[][] dir,
+            String[] dirS) {
         int n = vis.length, m = vis[0].length;
 
-        if (sr == n - 1 && sc == m - 1){
-            if (psf.size() > ans.size()) ans = psf;
-            else continue;
+        if (sr == n - 1 && sc == m - 1) {
+            if (psf.size() > ans.size())
+                ans = psf;
+            else
+                continue;
             return 1;
         }
 
         int count = 0;
         vis[sr][sc] = true;
 
-
-        for (int d = 0; d < dir.length; d++){
-            for (int jumps = 1; jumps < Math.max(m,n); jumps++){
+        for (int d = 0; d < dir.length; d++) {
+            for (int jumps = 1; jumps < Math.max(m, n); jumps++) {
                 int r = sr + jumps + dir[d][0];
                 int c = sc + jumps + dir[d][1];
 
-                if (r >= 0 && c >= 0 && r < n && c < m){
-                    if (vis[r][c] == false){
+                if (r >= 0 && c >= 0 && r < n && c < m) {
+                    if (vis[r][c] == false) {
                         count += longestPath(r, c, arr, ans, psf + dirS[d] + jumps, visited, dir, dirS);
                     }
                 }
@@ -127,9 +131,68 @@ public class Questions {
             }
         }
 
-
         vis[sr][sc] = false;
         return count;
+    }
+
+    public static int equiSet(int[] arr, int idx, int sum1, int sum2, String set1, String set2) {
+        if (idx == arr.length) {
+            if (sum1 == sum2) {
+                System.out.println(set1 + "= " + set2);
+                return 1;
+            }
+            return 0;
+        }
+
+        int count = 0;
+
+        count += equiSet(arr, idx + 1, sum1 + arr[idx], sum2, set1 + arr[idx] + " ", set2); // if in set1
+        count += equiSet(arr, idx + 1, sum1, sum2 + arr[idx], set1, set2 + arr[idx] + " "); // if in set2
+
+        return count;
+    }
+
+    public static int permutationUnique(String str, String ans) { // with boolean array
+        // will take more space than other but there is no need to sort the string here
+        if (str.length() == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+        boolean[] vis = new boolean[26];
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (!vis[ch - 'a']) {
+                vis[ch - 'a'] = true;
+                String ros = str.substring(0, i) + str.substring(i + 1);
+                count += permutationUnique(ros, ans + ch);
+            }
+        }
+        return count;
+    }
+
+    public static int permutationUnique2(String str, String ans) { // it will be faster but
+        // string is needed to be sorted
+        if (str.length() == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+        char prev = '$'; // to mark prev char
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (prev != ch) {
+                String ros = str.substring(0, i) + str.substring(i + 1);
+                count += permutationUnique2(ros, ans + ch);
+            }
+            prev = ch;
+        }
+        return count;
+    }
+
+    public static void equiSetH() {
+        int[] arr = { 10, 20, 30, 40, 50, 60, 70, 80 };
+        System.out.println(equiSet(arr, 1, 0 + arr[0], 0, "" + arr[0] + " ", ""));
     }
 
 }

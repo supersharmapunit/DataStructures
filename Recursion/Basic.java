@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Basic {
+    public static void main(String args[]) {
+        floodfillAlgorithm();
+    }
+
+
     public static void printIncreasing(int a, int b) {
         if (a > b)
             return;
@@ -159,6 +164,15 @@ public class Basic {
 
         return ans + 3;
 
+    }
+
+    public static int firstIdx(int[] arr, int idx, int ele) {
+        if (idx == arr.length)
+            return -1;
+
+        if (ele == arr[idx])
+            return idx;
+        return firstIdx(arr, idx + 1, ele);
     }
 
     public static int[] allIndex(int[] arr, int idx, int count, int data) {
@@ -545,8 +559,4 @@ public class Basic {
         System.out.println(ans.psf + " @ " + ans.len);
     }
 
-    public static void main(String args[]) {
-        floodfillAlgorithm();
-
-    }
 }
