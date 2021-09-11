@@ -33,7 +33,7 @@ public class MakeLL {
         void display(){
             Node temp = head;
             while(temp.next == null){
-                System.out.print(node.data + " ")
+                System.out.print(node.data + " ");
                 temp = temp.next;
             }
             System.out.println();
