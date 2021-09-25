@@ -6,6 +6,15 @@ public class MakeLL {
     public static class Node {
         int data;
         Node next;
+
+        Node(int val){
+            this.data = val;
+        }
+
+        Node(int val, int nnode){
+            this.data = val;
+            this.next = nnode;
+        }
     }
 
     public static class LinkedList {
