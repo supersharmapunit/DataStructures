@@ -4,7 +4,7 @@ public class Construct {
         Node right;
         Node left;
 
-        void Node(int data) {
+        Node(int data) {
             this.data = data;
         }
     }
@@ -13,7 +13,7 @@ public class Construct {
         Node node;
         int state;
 
-        void Pair(Node node, int state) {
+        Pair(Node node, int state) {
             this.node = node;
             this.state = state;
         }
@@ -81,7 +81,7 @@ public class Construct {
 
     public static int max(Node node) {
         if (node == null)
-            return Integer.MIN git push -u origin master_VALUE;
+            return Integer.MIN_VALUE;
 
         int lmax = max(node.left);
         int rmax = max(node.right);
