@@ -81,7 +81,7 @@ public class Construct {
 
     public static int max(Node node) {
         if (node == null)
-            return Integer.MIN_VALUE;
+            return Integer.MIN git push -u origin master_VALUE;
 
         int lmax = max(node.left);
         int rmax = max(node.right);
