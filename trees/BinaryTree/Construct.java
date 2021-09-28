@@ -1,15 +1,34 @@
-public class Construct {
-    private class Node {
-        int data;
-        Node right;
-        Node left;
+import java.util.*;
 
-        Node(int data) {
+public class Construct {
+    private static class Node {
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data, Node left, Node right) {
             this.data = data;
+            this.left = left;
+            this.right = right;
         }
     }
 
-    protected class Pair {
+    public static void display(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        String str = "";
+        str += node.left == null ? "." : node.left.data + "";
+        str += " <- " + node.data + " -> ";
+        str += node.right == null ? "." : node.right.data + "";
+        System.out.println(str);
+
+        display(node.left);
+        display(node.right);
+    }
+
+    protected static class Pair {
         Node node;
         int state;
 
@@ -23,39 +42,47 @@ public class Construct {
         Integer[] arr = { 10, 20, 40, null, null, 50, 60, null, null, null, 30, 70, null, 80, null, null, 90, null,
                 null };
         Node root = construct(arr);
-        disply(root);
+        display(root);
     }
 
-    public static void construct(Integer[] arr) {
-        Stack<Pair> st = new stack<>();
-        Node root = new Node(arr[0]);
-        st.push(new Pair(root, 0));
+    public static Node construct(Integer[] arr) {
+        Node root = new Node(arr[0], null, null);
+        Pair rtp = new Pair(root, 1);
 
-        for (int i = 1; i < arr.length; i++) {
-            Pair tos = st.peek();
+        Stack<Pair> st = new Stack<>();
+        st.push(rtp);
 
-            if (arr[i] == null) {
-                tos.state++;
-                if (tos.state == 2) {
-                    st.pop();
-                }
-            } else {
-                Node n = new Node(arr[i]);
-
-                if (tos.state == 0) {
-                    tos.state++;
-                    tos.node.left = n;
-                } else if (tos.state == 1) {
-                    // tos.state++; no need to do this as we need to pop because it'll be equal to 2
-                    // instead we'll pop
-                    tos.node.right = n;
-                    st.pop();
+        int idx = 0;
+        while (st.size() > 0) {
+            Pair top = st.peek();
+            if (top.state == 1) {
+                idx++;
+                if (arr[idx] != null) {
+                    top.node.left = new Node(arr[idx], null, null);
+                    Pair lp = new Pair(top.node.left, 1);
+                    st.push(lp);
                 } else {
-                    tos.node.left = null;
+                    top.node.left = null;
                 }
-                tos.state++;
+
+                top.state++;
+            } else if (top.state == 2) {
+                idx++;
+                if (arr[idx] != null) {
+                    top.node.right = new Node(arr[idx], null, null);
+                    Pair rp = new Pair(top.node.right, 1);
+                    st.push(rp);
+                } else {
+                    top.node.right = null;
+                }
+
+                top.state++;
+            } else {
+                st.pop();
             }
         }
+
+        return root;
     }
 
     public static int size(Node node) {
