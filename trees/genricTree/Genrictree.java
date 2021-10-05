@@ -195,4 +195,46 @@ public class Genrictree {
         return mp;
     }
 
+    // approach 1 with the use of static variables
+    static int htn; // height till now
+
+    public static int dia(Node node) {
+        htn = height(node);
+        for (Node child : node.children) {
+            int chtn = height(child);
+
+        }
+        return htn + 2;
+    }
+
+    public static class htPair {
+        int dia;
+
+        int ht;
+    }
+
+    public static htPair diameter2(Node node) { // approach 2 with the help of pair
+        int maxh = -1;
+        int smax = -1;
+        int dia = 0;
+
+        for (Node child : node.children) {
+            htPair cp = diameter2(child);
+
+            if (cp.ht > maxh) {
+                smax = maxh;
+                maxh = cp.ht;
+            } else if (cp.ht > smax) {
+                smax = cp.ht;
+            }
+
+            dia = Math.max(dia, cp.dia);
+        }
+
+        htPair mp = new htPair();
+        mp.ht = maxh + 1;
+        mp.dia = Math.max(dia, maxh + smax + 2);
+        return mp;
+    }
+
 }
