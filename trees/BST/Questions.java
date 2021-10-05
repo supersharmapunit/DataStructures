@@ -146,7 +146,7 @@ public class Questions {
 
         if (data < node.data) {
             node.left = add(node.left, data);
-        } else if(data > node.data) {
+        } else if (data > node.data) {
             node.right = add(node.right, data);
         }
         return node;
@@ -185,8 +185,10 @@ public class Questions {
     }
 
     // replace with sum of larger
-    // Reverse In-order Prefix Sum -> reverse inorder traversal(sum should be maintained)
+    // Reverse In-order Prefix Sum -> reverse inorder traversal(sum should be
+    // maintained)
     static int sum = 0;
+
     public static void rwsol(Node node) {
         if (node == null)
             return;
@@ -198,6 +200,16 @@ public class Questions {
 
         rwsol(node.left);
 
+    }
+
+    // Lowest Common Ancester
+    public static int lca(Node node, int d1, int d2) {
+        if (d1 < node.data && d2 < node.data)
+            return lca(node.left, d1, d2);
+        else if (d1 > node.data && d2 > node.data)
+            return lca(node.right, d1, d2);
+        else
+            return node.data;
     }
 
 }
