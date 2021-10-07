@@ -73,10 +73,10 @@ public class SnQLeet{
     }
 
     // https://practice.geeksforgeeks.org/problems/stock-span-problem-1587115621/1
-    public static int[] calculateSpan(int price[], int n)
-    {
+    // public static int[] calculateSpan(int price[], int n)
+    // {
         
-    }
+    // }
 
     // Leetcode 20
     public boolean isValid(String s) {
@@ -150,9 +150,9 @@ public class SnQLeet{
     }
 
     // Leetcode 32
-    public int longestValidParentheses(String s) {
+    // public int longestValidParentheses(String s) {
         
-    }
+    // }
 
     // Leetcode 735
     public int[] asteroidCollision(int[] asteroids) {
@@ -284,9 +284,9 @@ public class SnQLeet{
     }
 
     // Leetcode 42
-    public int trap(int[] height) {
+    // public int trap(int[] height) {
         
-    }
+    // }
 
     // Leetcode925
     public boolean isLongPressedName(String name, String typed) {
