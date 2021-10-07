@@ -137,9 +137,8 @@ public class Basic {
 
     public static void KthLargest(int[] arr, int k) {
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        pq.add(arr[0]);
 
-        for (int i = 1; i < arr.length; i++) {
+        for (int i = 0; i < arr.length; i++) {
             pq.add(arr[i]);
             if (pq.size() > k) {
                 while (pq.size() > k)
@@ -150,5 +149,28 @@ public class Basic {
         while (pq.size() != 0) {
             System.out.println(pq.remove());
         }
+    }
+
+    // sort k-sorted array
+    public static void kSorted(int[] arr, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+
+        int i = 0;
+        for (; i < k; i++) { // k elements in pq
+            pq.add(arr[i]);
+        }
+
+        for (; i < arr.length; i++) { // add a element then remove an element and place that into right place
+            pq.add(arr[i]);
+            arr[i - k] = pq.remove();
+        }
+
+        while (pq.size() != 0) { // when arr is iterated but pq still have some elements
+            arr[i - k] = pq.remove();
+            i++;
+        }
+
+        for (i = 0; i < arr.length; i++)
+            System.out.println(arr[i]);
     }
 }
