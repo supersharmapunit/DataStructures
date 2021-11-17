@@ -24,4 +24,11 @@ public class BitManipulation {
         System.out.println(n ^ mask3);
         System.out.println((n & mask4) == 0 ? "false" : "true");
     }
+
+    public static void rightbitSetMask(int n){
+        int ans = n & ((~n) + 1);
+        // int ans = n & (-n);
+        // n & ((~n) + 1) === n & (-n);
+        System.out.println(Integer.toBinaryString(ans));
+    }
 }
