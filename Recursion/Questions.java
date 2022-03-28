@@ -104,18 +104,17 @@ public class Questions {
 
     public static int longestPath(int sr, int sc, int[][] arr, String ans, String psf, boolean[][] visited, int[][] dir,
             String[] dirS) {
-        int n = vis.length, m = vis[0].length;
+        int n = visited.length, m = visited[0].length;
 
         if (sr == n - 1 && sc == m - 1) {
-            if (psf.size() > ans.size())
+            if (psf.length() > ans.length())
                 ans = psf;
-            else
-                continue;
+            
             return 1;
         }
 
         int count = 0;
-        vis[sr][sc] = true;
+        visited[sr][sc] = true;
 
         for (int d = 0; d < dir.length; d++) {
             for (int jumps = 1; jumps < Math.max(m, n); jumps++) {
@@ -123,7 +122,7 @@ public class Questions {
                 int c = sc + jumps + dir[d][1];
 
                 if (r >= 0 && c >= 0 && r < n && c < m) {
-                    if (vis[r][c] == false) {
+                    if (visited[r][c] == false) {
                         count += longestPath(r, c, arr, ans, psf + dirS[d] + jumps, visited, dir, dirS);
                     }
                 }
@@ -131,7 +130,7 @@ public class Questions {
             }
         }
 
-        vis[sr][sc] = false;
+        visited[sr][sc] = false;
         return count;
     }
 

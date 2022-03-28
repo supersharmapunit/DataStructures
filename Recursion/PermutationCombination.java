@@ -1,11 +1,16 @@
+import java.lang.reflect.Array;
 import java.util.*;
+// Leetcode article - shorturl.at/gxCWY
+// CN article - https://www.codingninjas.com/blog/2021/09/18/subsequence-vs-substring/
+// permutation -> arrangements
+// Draw tree diagram for better understanding
+
 
 // Any code can be used as template to solve any permutation combination question
-
 public class PermutationCombination {
 
     // through coin Change problem
-    // Type1 coin can be used infinite times
+    // Type1 coin can be used infinite times with arrangements
     public static int permutationInfi(int[] coins, int tar, String ans) {
         if (tar == 0) {
             System.out.println(ans);
@@ -100,6 +105,7 @@ public class PermutationCombination {
         return count;
     }
 
+    // Type 6
     public static int combinationInfiCoins_sub(int[] coins, int tar, int idx, String ans) {
         if (tar == 0 || idx == coins.length) {
             if (tar == 0) {
@@ -118,6 +124,7 @@ public class PermutationCombination {
         return count;
     }
 
+    // Type 7
     public static int permutationInfiCoins_sub(int[] coins, int tar, int idx, String ans){
         if (tar == 0 || idx == coins.length) {
             if (tar == 0) {
@@ -136,6 +143,7 @@ public class PermutationCombination {
         return count;
     }
 
+    // Type 8
     public static int permutationSingleCoin_sub(int[] coins, int tar, int idx, String ans){
         if(tar == 0 || idx >= coins.length){
             if(tar == 0){
@@ -173,11 +181,41 @@ public class PermutationCombination {
     // ==================================================================================================================================
 
     public static void main(String[] args) {
-        int[] coins = { 2, 3, 5, 7 };
-        int tar = 10;
+        // int[] coins = { 2, 3, 5, 7 };
+        // int tar = 10;
         // int count = permutationInfi(coins, tar, "");
         // int count = combinationSingleCoin_sub(coins, tar, 0, "");
         // System.out.println("count : " + count);
-        subsequences(coins, tar);
+        // subsequences(coins, tar);
+        int[] arr = {1,2,1};
+        oneSubsequence(0, 0, new ArrayList<Integer>(), 2, arr, arr.length);
+    }
+
+    // how to print only one subsequence-> this is the technique
+    public static boolean oneSubsequence(int idx, int ssf, ArrayList<Integer> ans, int tar, int arr[], int n) {
+        if(idx == n){
+            // condition satisfied
+            if(ssf == tar){
+                for(int ele : ans) System.out.print(ele+" ,");
+                System.out.println();
+                return true;
+            }
+            // condition not satisfied
+            return false;
+        }
+
+        // if we pick the element
+        ans.add(arr[idx]);
+        ssf += arr[idx];
+        if(oneSubsequence(idx+1, ssf, ans, tar, arr, n)) return true;
+        
+        // if we do not pick the element
+        ans.remove(ans.size()-1);
+        ssf -= arr[idx];
+        if(oneSubsequence(idx+1, ssf, ans, tar, arr, n)) return true;
+
+        return false;
+
+
     }
 }
