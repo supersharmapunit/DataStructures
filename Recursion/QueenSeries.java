@@ -9,10 +9,10 @@ public class QueenSeries {
             System.out.println(ans);
             return 1;
         }
-        int count = 0;
 
+        int count = 0;
         for (int i = bno; i < tnb; i++) {
-            count += queenCombination(tnb, tnq, i + 1, qno + 1, ans + "b" + i + "q" + qno + " ");
+            count += queenCombination(tnb, tnq, i + 1, qno + 1, ans + "q" + qno + "b" + i + " ");
         }
         return count;
     }
@@ -23,10 +23,13 @@ public class QueenSeries {
             return 1;
         }
         int count = 0, n = boxes.length, m = boxes[0].length;
-
-        for (int i = bno; i < n * m; i++) {
-            int r = i / m, c = i % m;
-            count += queenCombination2d(boxes, tnq - 1, i + 1, ans + "(b" + r + "q" + c + ") ");
+        for(int i = bno; i < n*m; i++){
+            int r = i/m, c = i%m;
+            if(!boxes[r][c]){
+                boxes[r][c] = true;
+                count += queenCombination2d(boxes, tnq-1, i+1, ans+"("+r+","+c+") ");
+                boxes[r][c] = false;
+            }
         }
         return count;
     }
@@ -50,16 +53,16 @@ public class QueenSeries {
     }
 
     public static int queenPermutation(boolean[] boxes, int tnq, int bno, int qno, String ans) {
-        if (tnq == qno) {
+        if(qno == tnq){
             System.out.println(ans);
             return 1;
         }
-        int count = 0;
 
-        for (int i = bno; i < boxes.length; i++) {
-            if (!boxes[i]) {
+        int count = 0;
+        for(int i = 0; i < boxes.length; i++){
+            if(!boxes[i]){
                 boxes[i] = true;
-                count += queenPermutation(boxes, tnq, 0, qno + 1, ans + "b" + i + "q" + qno + " ");
+                count += queenPermutation(boxes, tnq, 0, qno+1, ans+" q"+qno+" b"+i);
                 boxes[i] = false;
             }
         }
@@ -105,17 +108,53 @@ public class QueenSeries {
         return count;
     }
 
+    // ===============================================================================================================
+
+    public static int nQueens01Combination(boolean[][] boxes, int tnq, int bno, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0, n = boxes.length, m = boxes[0].length;
+        for(int i = bno; i < n*m; i++){
+            int r = i/m, c = i%m;
+            if(isSafe(boxes, r, c)){
+                boxes[r][c] = true;
+                count += nQueens01Combination(boxes, tnq-1, i+1, ans+"("+r+","+c+") ");
+                boxes[r][c] = false;
+            }
+        }
+        return count;
+    }
+
+    public static boolean isSafe(boolean[][] boxes, int r, int c){
+        for(int row = r-1; row >= 0; row--){
+            if(boxes[row][c]) return false;
+        }
+        for(int col = c-1; col >= 0; col--){
+            if(boxes[r][col]) return false;
+        }
+        for(int col = c-1, row = r-1; col >= 0 && row >= 0; col--, r--){
+            if(boxes[row][col]) return false;
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
-        // int count = queenCombination(5, 3, 0, 0,"");
-        // System.out.println("count : "+ count);
+        // int count = queenCombination(6, 3, 0, 0, "");
+        // System.out.println("count : " + count);
         // System.out.println("------------------------------------------");
         // int countSub = queenCombination_sub(5, 3, 0, 0,"");
         // System.out.println("count : "+ countSub);
-        // int countPer = queenPermutation(new boolean[5], 3, 0, 0, "");
+        // int countPer = queenPermutation(new boolean[6], 3, 0, 0, "");
         // System.out.println("count : " + countPer);
         // int countPersub = queenPermutation_sub(new boolean[5], 3, 0, 0, "");
         // System.out.println("count : " + countPersub);
-        int count = queenPermutation2d(new boolean[4][4], 4, 0, "");
+        // int count = queenPermutation2d(new boolean[4][4], 4, 0, "");
+        // System.out.println("count : " + count);
+        // int count = queenCombination2d(new boolean[4][4], 4, 0, "");
+        // System.out.println("count : " + count);
+        int count = nQueens01Combination(new boolean[4][4], 4, 0, "");
         System.out.println("count : " + count);
     }
 

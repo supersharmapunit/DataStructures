@@ -218,4 +218,28 @@ public class PermutationCombination {
 
 
     }
+
+    // how to print subsequence with sum == k
+    /*
+    int f(){
+        base case->
+            return 1 (if condition satisfied)
+            return 0 (if not)
+        
+        call left recursive subtree
+        l = f();
+        call right recursive subtree
+        r = f();
+
+        return l + r;
+        
+        
+        what if there are n recurion calls then
+        count = 0
+        for(int i -> n) s += f();
+        return count;
+
+    }
+
+    */
 }
