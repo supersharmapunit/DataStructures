@@ -263,10 +263,10 @@ public class QueenSeries {
             String smallStr = str.substring(0, len);
 
             if (wordDict.contains(smallStr)) { // contains ilove so we'll make a call
-                if (wordBreakSolver(str.substring(len), asf + smallStr + " ", wordDict)) // call for str.substring(len)
-                                                                                         // ilovemangoandsamsung ->
-                                                                                         // mangoandsamsung
+                if (wordBreakSolver(str.substring(len), asf + smallStr + " ", wordDict)){
+                    // call for str.substring(len) ilovemangoandsamsung -> mangoandsamsung
                     return true;
+                } 
             }
         }
         return false;
