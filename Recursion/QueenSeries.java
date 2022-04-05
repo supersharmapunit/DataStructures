@@ -127,17 +127,42 @@ public class QueenSeries {
         return count;
     }
 
-    public static boolean isSafe(boolean[][] boxes, int r, int c){
-        for(int row = r-1; row >= 0; row--){
-            if(boxes[row][c]) return false;
-        }
-        for(int col = c-1; col >= 0; col--){
-            if(boxes[r][col]) return false;
-        }
-        for(int col = c-1, row = r-1; col >= 0 && row >= 0; col--, r--){
-            if(boxes[row][col]) return false;
+    public static boolean isSafe(boolean chess[][], int row, int col){
+        int n = chess.length, m = chess[0].length;
+    
+        int dir[][] = {{-1,0},{-1,1},{0,1},{1,1},{1,0}, {1,-1}, {0,-1}, {-1,-1}}; // will be required for nqueenpermutation
+        // int dir[][] = {{-1,0},{-1,1}, {0,-1}, {-1,-1}}; // there are 8 directions but other than these 4 dirs board is yet to be explored
+        //  so the previously placed queens are the only obstacles which we need to check ** just for nqueen combination **
+    
+        for(int d = 0; d < dir.length; d++){
+            for(int rad = 1; rad <= n; rad++){
+            int r = row + rad*dir[d][0];
+            int c = col + rad*dir[d][1];
+    
+                if(r >= 0 && c >= 0 && r < n && c < n){
+                    if(chess[r][c]) return false;
+                } else break;
+            }
         }
         return true;
+        
+    }
+    
+    public static int nQueenPermutation(boolean chess[][], int tnq, String ans){
+        if(0 == tnq){
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0, n = chess.length;
+        for(int idx = 0; idx < n*n; idx++){
+            int r = idx/n, c = idx%n;
+            if(!chess[r][c] && isSafe(chess, r,c)){
+                chess[r][c] = true;
+                count +=nQueenPermutation(chess, tnq-1, ans + "(R"+r+",C"+c+") ");
+                chess[r][c] = false;
+            }
+        }
+        return count;
     }
 
     public static void main(String[] args) {
