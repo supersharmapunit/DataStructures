@@ -154,7 +154,7 @@ public class LinkedList01 {
     }
 
     // LC21
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    public ListNode mergeTwoSortedLists(ListNode list1, ListNode list2) {
         if(list1 == null || list2 == null) return list1 == null ? list2 : list1;
 
         ListNode dummy = new ListNode(-1), prev = dummy, ptr1 = list1, ptr2 = list2;
@@ -172,6 +172,107 @@ public class LinkedList01 {
         }
 
         return dummy.next;
+    }
+
+    // unfold a List opposite of reorder list
+    public void unfold(ListNode head) {
+        if (head == null || head.next == null)
+            return;
+
+        ListNode h1 = head, h2 = head.next, c1 = h1, c2 = h2;
+
+        while (c2 != null && c2.next != null) {
+            ListNode f = c2.next;
+
+            c1.next = f;
+            c2.next = f.next;
+
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        h2 = reverseList(h2);
+        c1.next = h2;
+    }
+
+
+    // Leetcode 19
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head == null || n > 32) return null;
+
+        ListNode slow = head, fast = head;
+        while(n-- > 0) fast = fast.next;
+
+        if(fast == null){
+            ListNode removeNode = head;
+            head = head.next;
+            removeNode.next = null;
+            return head;
+        }
+
+        while(fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        ListNode removeNode = slow.next;
+        slow.next = removeNode.next;
+        removeNode.next = null;
+        return head;
+    }
+
+    // Leetcode 2 -> list given is already reversed
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if(l1 == null || l2 == null) return (l1 == null) ? l2 : l1;
+        
+        ListNode dummy = new ListNode(-1), prev = dummy, ptr1 = l1, ptr2 = l2;
+        int carry = 0;
+        while(ptr1 != null || ptr2 != null || carry != 0){
+            int sum = carry + (ptr1 != null ? ptr1.val : 0) + (ptr2 != null ? ptr2.val : 0);
+            carry = sum/10;
+            prev.next = new ListNode(sum % 10);
+            prev = prev.next;
+            
+            if(ptr1 != null) ptr1 = ptr1.next;
+            if(ptr2 != null) ptr2 = ptr2.next;
+        }
+        
+        ListNode head = dummy.next;
+        dummy.next = null;
+        return head;
+    }
+
+    // Leetcode 445 addTwoNumber2 -> list given is not in reverse order
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if(l1 == null || l2 == null) return (l1 == null) ? l2 : l1;
+        
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        
+        ListNode dummy = new ListNode(-1), prev = dummy, ptr1 = l1, ptr2 = l2;
+        int carry = 0;
+        while(ptr1 != null || ptr2 != null || carry != 0){
+            int sum = carry + (ptr1 != null ? ptr1.val : 0) + (ptr2 != null ? ptr2.val : 0);
+            carry = sum/10;
+            prev.next = new ListNode(sum % 10);
+            prev = prev.next;
+            
+            if(ptr1 != null) ptr1 = ptr1.next;
+            if(ptr2 != null) ptr2 = ptr2.next;
+        }
+        
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        
+        ListNode head = dummy.next;
+        dummy.next = null;
+        head = reverseList(head);
+        return head;
+    }
+
+    // madeup
+    public ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        return null;
     }
 
 }
