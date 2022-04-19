@@ -376,28 +376,30 @@ public class LinkedList01 {
     // remove all duplicates
     // https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/linked-list/remove-all-duplicates-from-sorted-linkedlist/ojquestion
     public ListNode removeAllDuplicates(ListNode head) {
-        if(head == null || head.next == null) return head;
+        if (head == null || head.next == null)
+            return head;
 
         ListNode dummy = new ListNode(-1), prev = dummy, curr = head.next;
-        
+
         prev.next = head;
         // prev.next = head beacuse we're considering it as potential ele
-        
-        while(curr != null){
+
+        while (curr != null) {
             boolean isSequence = false;
-            while(curr != null && prev.next.val == curr.val){
+            while (curr != null && prev.next.val == curr.val) {
                 curr = curr.next;
                 isSequence = true;
             }
 
-            if(isSequence){
+            if (isSequence) {
                 prev.next = curr; // now at the end of prev seq. we're making curr ele as potential unique ele
             } else {
                 // element is unique
                 prev = prev.next;
             }
 
-            if(curr != null) curr = curr.next;
+            if (curr != null)
+                curr = curr.next;
         }
 
         return dummy.next;
