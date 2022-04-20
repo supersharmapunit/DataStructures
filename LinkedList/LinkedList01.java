@@ -159,21 +159,32 @@ public class LinkedList01 {
 
     // LC21
     public ListNode mergeTwoSortedLists(ListNode list1, ListNode list2) {
-        if (list1 == null || list2 == null)
+        if (list1 == null || list2 == null) {
             return list1 == null ? list2 : list1;
+        }
 
-        ListNode dummy = new ListNode(-1), prev = dummy, ptr1 = list1, ptr2 = list2;
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy, ptr1 = list1, ptr2 = list2;
 
         while (ptr1 != null && ptr2 != null) {
+            ListNode fwd1 = ptr1.next, fwd2 = ptr2.next;
+
             if (ptr1.val <= ptr2.val) {
                 prev.next = ptr1;
-                ptr1 = ptr1.next;
+                ptr1 = fwd1;
             } else {
                 prev.next = ptr2;
-                ptr2 = ptr2.next;
+                ptr2 = fwd2;
             }
 
             prev = prev.next;
+        }
+
+        if (ptr1 != null) {
+            prev.next = ptr1;
+        }
+        if (ptr2 != null) {
+            prev.next = ptr2;
         }
 
         return dummy.next;
@@ -403,6 +414,155 @@ public class LinkedList01 {
         }
 
         return dummy.next;
+    }
+
+    // https://practice.geeksforgeeks.org/problems/segregate-even-and-odd-nodes-in-a-linked-list5035/1#
+    public static ListNode segregateEvenOdd(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode even = new ListNode(-1), peven = even, curr = head;
+        ListNode odd = new ListNode(-1), podd = odd;
+
+        while (curr != null) {
+            if (curr.val % 2 == 0) {
+                peven.next = curr;
+                peven = peven.next;
+            } else {
+                podd.next = curr;
+                podd = podd.next;
+            }
+
+            curr = curr.next;
+        }
+
+        peven.next = odd.next;
+        podd.next = null;
+        return even.next;
+
+    }
+
+    // Leetcode 148
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode mid = middleNode_01(head), nHead = mid.next;
+        mid.next = null;
+
+        return mergeTwoSortedLists(sortList(head), sortList(nHead));
+    }
+
+    // Leetcode 23 (Bad time complexity O(NK))
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode ans = null;
+
+        for (ListNode list : lists) {
+            ans = mergeTwoSortedLists(ans, list);
+        }
+
+        return ans;
+    }
+
+    // leetcode 23 optimized (time complexity O(NlogK))
+    public ListNode mergeKLists(ListNode[] lists) {
+        int n = lists.length;
+
+        return mergeKListsHelp(lists, 0, n - 1);
+    }
+
+    public ListNode mergeKListsHelp(ListNode[] lists, int si, int ei) {
+        if (si >= ei)
+            return si > ei ? null : lists[si];
+
+        int mid = (si + ei) / 2;
+
+        return mergeTwoSortedLists(mergeKListsHelp(lists, si, mid), mergeKListsHelp(lists, mid + 1, ei));
+    }
+
+    // Leetcode 25
+    ListNode th = null, tt = null; // th -> temp head, tt -> temp tail
+    // this can also be done without using the global variables like we can maintain
+    // 2 size array where 0th idx store th's address and 1st idx store tt's address
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        int len = size(head);
+        if (head == null || head.next == null || k == 1)
+            return head;
+
+        ListNode ah = null, at = null, curr = head;
+        // ah -> actual head, at = actual tail
+
+        while (len >= k) {
+            int tempK = k;
+
+            while (tempK-- > 0) {
+                ListNode fwd = curr.next;
+                curr.next = null;
+                addFirst(curr);
+                curr = fwd;
+            }
+
+            if (ah == null) {
+                ah = th;
+                at = tt;
+            } else {
+                at.next = th;
+                at = tt;
+            }
+
+            th = tt = null;
+            len -= k;
+        }
+        at.next = curr;
+        return ah;
+    }
+
+    private void addFirst(ListNode node) {
+        if (th == null)
+            th = tt = node;
+        else {
+            node.next = th;
+            th = node;
+        }
+    }
+
+    // Leetcode 92
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(head == null || head.next == null || left == right) return head;
+        
+        ListNode prev = null, curr = head;
+        int idx = 1;
+        
+        while(curr != null){
+            while(curr != null && idx >= left && idx <= right){
+//                 work to do in range
+                ListNode fwd = curr.next;
+                curr.next = null;
+                
+                addFirst(curr);
+                curr = fwd;
+                    
+                idx++;
+            }
+            
+            if(idx > right){
+                if(prev != null){
+                    prev.next = th;
+                    tt.next = curr;
+                    return head;
+                } else {
+                    // dry run for any case which has left == 1
+                    tt.next = curr;
+                    return th; // will act as new head
+                }
+            }
+            
+            prev = curr;
+            curr = curr.next;
+            idx++;
+        }
+        return head;
     }
 
 }
