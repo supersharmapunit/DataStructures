@@ -529,25 +529,26 @@ public class LinkedList01 {
 
     // Leetcode 92
     public ListNode reverseBetween(ListNode head, int left, int right) {
-        if(head == null || head.next == null || left == right) return head;
-        
+        if (head == null || head.next == null || left == right)
+            return head;
+
         ListNode prev = null, curr = head;
         int idx = 1;
-        
-        while(curr != null){
-            while(curr != null && idx >= left && idx <= right){
-//                 work to do in range
+
+        while (curr != null) {
+            while (curr != null && idx >= left && idx <= right) {
+                // work to do in range
                 ListNode fwd = curr.next;
                 curr.next = null;
-                
+
                 addFirst(curr);
                 curr = fwd;
-                    
+
                 idx++;
             }
-            
-            if(idx > right){
-                if(prev != null){
+
+            if (idx > right) {
+                if (prev != null) {
                     prev.next = th;
                     tt.next = curr;
                     return head;
@@ -557,12 +558,50 @@ public class LinkedList01 {
                     return th; // will act as new head
                 }
             }
-            
+
             prev = curr;
             curr = curr.next;
             idx++;
         }
         return head;
+    }
+
+    // Leetcode 817 do the dry run you'll understand
+    public int numComponents(ListNode head, int[] nums) {
+        int components = 0;
+        if (head == null || nums.length == 0)
+            return components;
+
+        HashSet<Integer> set = new HashSet<>();
+        for (int ele : nums)
+            set.add(ele);
+
+        ListNode curr = head;
+        while (curr != null) {
+            if (set.contains(curr.val) && (curr.next == null || !set.contains(curr.next.val)))
+                components++;
+            curr = curr.next;
+        }
+
+        return components;
+    }
+
+    // Leetcode141 cycle detection
+    public boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null)
+            return false;
+
+        ListNode slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast)
+                break;
+        }
+
+        return slow == fast;
     }
 
 }
