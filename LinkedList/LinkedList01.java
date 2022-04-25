@@ -604,4 +604,48 @@ public class LinkedList01 {
         return slow == fast;
     }
 
+    // Leetcode 142
+    public ListNode detectCycle(ListNode head) {
+        if(head == null || head.next == null) return null;
+        
+        ListNode slow = head, fast = head;
+        
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            
+            if(slow == fast) break;
+        }
+        
+        if(slow != fast) return null;
+        slow = head;
+        
+        while(slow != fast){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        
+        return slow;
+    }
+
+    // Leetcode 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if(headA == null || headB == null) return null;
+        
+        ListNode tailA = getTail(headA);
+        tailA.next = headB;
+        ListNode intersectionNode = detectCycle(headA);
+        tailA.next = null;
+        return intersectionNode;
+    }
+
+    private ListNode getTail(ListNode head){
+        if(head == null || head.next == null) return head;
+        
+        ListNode ptr = head;
+        while(ptr.next != null)
+            ptr = ptr.next;
+        return ptr;
+    }
+
 }
