@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 // After DynamicProgramming.java
 /*
 Steps to go from RECURSION -> MEMOIZATION -> TABULATION
@@ -125,42 +127,6 @@ public class Questions {
             b = sum;
         }
         return a;
-    }
-
-    // HW :
-    // https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1
-
-    public long friendsPairing_memo(int n, long[] dp) {
-        if (n <= 1) {
-            return dp[n] = 1;
-        }
-
-        if (dp[n] != 0)
-            return dp[n];
-
-        long single = friendsPairing_memo(n - 1, dp);
-        long pairUp = friendsPairing_memo(n - 2, dp) * (n - 1);
-
-        return dp[n] = single + pairUp;
-    }
-
-    public long friendsPairing_tabu(int N, long[] dp) {
-        long mod = (long) 1e9 + 7;
-        for (int n = 0; n <= N; n++) {
-            if (n <= 1) {
-                dp[n] = 1;
-                continue;
-            }
-            dp[n] = (dp[n - 1] % mod + (dp[n - 2] % mod * (n - 1)) % mod) % mod;
-        }
-
-        return dp[N];
-    }
-
-    public long countFriendsPairings(int n) {
-        long[] dp = new long[n + 1];
-        long ans = friendsPairing_tabu(n, dp);
-        return ans;
     }
 
     // maze Path
@@ -446,8 +412,9 @@ public class Questions {
     public int boardPath() {
         // starting point -> ending point (All ways) using step found by rolling dice
         int sp = 0, ep = 10;
-        int dp = new int[ep + 1];
-        boardPahtMemo(sp, ep, dp);
+        int[] dp = new int[ep + 1];
+        int count = boardPahtMemo(sp, ep, dp);
+        return count;
     }
 
     public int boardPahtMemo(int sp, int ep, int[] dp) {
@@ -481,6 +448,66 @@ public class Questions {
         }
         return dp[SP];
     }
+
+
+    // gfg- Goldmine Problem
+    public int maxGold(int n, int m, int M[][]) {
+        int[][] dir = { { 1, 1 }, { 0, 1 }, { -1, 1 } };
+        int[][] dp = new int[n][m];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, goldMineMemo(i, 0, M, dir, dp));
+        }
+        return max;
+    }
+
+    public static int goldMineMemo(int sr, int sc, int[][] arr, int[][] dir, int dp[][]) {
+        int n = arr.length, m = arr[0].length;
+        if (sc == m - 1)
+            return dp[sr][sc] = arr[sr][sc];
+        if (dp[sr][sc] != -1)
+            return dp[sr][sc];
+        int max = 0;
+
+        for (int[] d : dir) {
+            int r = sr + d[0], c = sc + d[1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m) {
+                max = Math.max(max, goldMineMemo(r, c, arr, dir, dp) + arr[sr][sc]);
+            }
+        }
+        return dp[sr][sc] = max;
+    }
+
+    public static int goldMineTab(int SR, int SC, int[][] arr, int[][] dp, int[][] dir) {
+        int n = arr.length, m = arr[0].length;
+        for (int sc = m - 1; sc >= SC; sc--) {
+            for (int sr = n - 1; sr >= SR; sr--) {
+                if (sc == m - 1) {
+                    dp[sr][sc] = arr[sr][sc];
+                    continue;
+                }
+                int max = 0;
+
+                for (int[] d : dir) {
+                    int r = sr + d[0], c = sc + d[1];
+
+                    if (r >= 0 && c >= 0 && r < n && c < m) {
+                        max = Math.max(max, dp[r][c] + arr[sr][sc]);
+                    }
+                }
+                dp[sr][sc] = max;
+            }
+        }
+
+        return dp[SR][SC];
+    }
+
+    // STRINGS==========================================================================================================
+
 
     // LC91-Decode ways
     public int numDecodings(String s) {
@@ -620,5 +647,159 @@ public class Questions {
         }
 
         return dp[idx] = count;
+    }
+
+    public long numDecoding2Tab(String str, int IDX, long[] dp) {
+        int n = str.length(), mod = (int) 1e9 + 7;
+        for (int idx = n; idx >= IDX; idx--) {
+            if (idx == n) {
+                dp[idx] = 1;
+                continue;
+            }
+
+            char ch1 = str.charAt(idx);
+            if (ch1 == '0') {
+                dp[idx] = 0; // str = 029*13 i.e ch1 = 0-> represents no decoding
+                continue;
+            }
+
+            long count = 0;
+
+            if (ch1 == '*') { // str == *1349 i.e ch1 = *
+                count = (count + 9 * dp[idx + 1]) % mod; // range 1-9 i.e *9 because all will give
+                                                         // the same number of answer
+
+                // for second ch
+                if (idx < n - 1) {
+                    char ch2 = str.charAt(idx + 1);
+
+                    if (ch2 >= '0' && ch2 <= '6') { // ch1+ch2 can form only numbers between 10-16 and 20-26 i.e *2
+                        count = (count + (2 * dp[idx + 2])) % mod;
+                    } else if (ch2 >= '7' && ch2 <= '9') { // ch1+ch2 can form only numbers between 17-19
+                        count = (count + dp[idx + 2]) % mod;
+                    } else { // i.e its a star therfore the number which can be formed is in the range 11-26
+                        count = (count + (15 * dp[idx + 2])) % mod;
+                    }
+                }
+            } else { // ch1 == normal ch encoding from 1-9
+                count = (count + dp[idx + 1]) % mod; // range 1-9 i.e
+
+                if (idx < n - 1) {
+                    char ch2 = str.charAt(idx + 1);
+
+                    if (ch2 == '*' && ch1 == '1') { // ch1+ch2 will be in the range 11-19
+                        count = (count + dp[idx + 2] * 9) % mod;
+                    } else if (ch2 == '*' && ch1 == '2') { // ch1+ch2 will be in the range 21-26
+                        count = (count + (dp[idx + 2] * 6)) % mod;
+                    } else if (ch2 != '*') {
+                        int num = (ch1 - '0') * 10 + (ch2 - '0');
+                        if (num <= 26)
+                            count = (count + dp[idx + 2]) % mod;
+                    }
+                }
+            }
+
+            dp[idx] = count;
+        }
+        return dp[IDX];
+    }
+    ToDivideNinK
+    // HW :
+    // https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1
+    // imaging like people sitting in a bus on pair seat and single seat
+    public long countFriendsPairingsRecursive(int n) {
+        if (n == 0)
+            return 1; // we've made everybody sit down in pairs and singles as they want
+
+        long single = countFriendsPairingsRecursive(n - 1); // call on remaining people
+
+        // call on remaining people(i.e.n-2) * (this person want to pair up and he can
+        // pair up with anybody except himself(i.e.n-1))
+        long pair = n - 2 >= 0 ? (countFriendsPairingsRecursive(n - 2) * (n - 1)) % mod : 0;
+
+        return (single + pair) % mod;
+
+    }
+
+    public long countFriendsPairingsMemo(int n, long[] dp) {
+        if (n == 0)
+            return dp[n] = 1;
+        if (dp[n] != -1)
+            return dp[n];
+
+        long single = countFriendsPairingsMemo(n - 1, dp);
+        long pair = n - 2 >= 0 ? (countFriendsPairingsMemo(n - 2, dp) * (n - 1)) % mod : 0;
+
+        return dp[n] = (single + pair) % mod;
+    }
+
+    public long countFriendsPairingsTab(int N, long[] dp) {
+        for (int n = 0; n <= N; n++) {
+            if (n == 0) {
+                dp[n] = 1;
+                continue;
+            }
+
+            long single = dp[n - 1];
+            long pair = n - 2 >= 0 ? dp[n - 2] * (n - 1) % mod : 0;
+
+            dp[n] = (single + pair) % mod;
+        }
+        return dp[N];
+    }
+
+    public long countFriendsPairingsTab(int n) {
+        // return cfp(n);
+        if (n == 0)
+            return 0;
+        long dp[] = new long[n + 1];
+        Arrays.fill(dp, -1);
+        // return cfpMemo(n, dp);
+        return countFriendsPairingsTab(n, dp);
+    }
+
+    public long countFriendsPairingsOpti(int n) {
+        long a = 1, b = 1;
+        for (int i = 2; i <= n; i++) {
+            long sum = b + (a * (i - 1)) % mod; // b-> single, a -> pairup *(i-1)
+            a = b;
+            b = sum % mod;
+        }
+        return b;
+    }
+
+    // https://www.geeksforgeeks.org/count-the-number-of-ways-to-divide-n-in-k-groups-incrementally/
+    public static int numberOfWaysToDivideNinK_MEMO(int n, int k, int[][] dp) {
+        if (n == k || k == 1) // n == k everybody has to form their own group to satisfy the condition
+        // k == 1 every will have to form a group because group size is 1
+            return dp[n][k] = 1;
+        
+        if (dp[n][k] != 0)
+            return dp[n][k];
+
+        int selfGroup = numberOfWaysToDivideNinK_MEMO(n - 1, k - 1, dp); // leader
+        int partOfSomeonesGroup = numberOfWaysToDivideNinK_MEMO(n - 1, k, dp) * k; // part of someone elses group so that the combination
+        // can be formed with anyone in the group i.e we multiply it by k
+
+        return dp[n][k] = selfGroup + partOfSomeonesGroup;
+    }
+
+    public static int numberOfWaysToDivideNinK_Tab(int N, int K, int[][] dp){
+    	for(int k = 1; k <= K; k++){
+    		for(int n = k; n <= N; n++){
+    			if (n == k || k == 1){
+    				dp[n][k] = 1;
+    				continue;
+    			}
+             
+
+        		int selfGroup = dp[n-1][k-1];
+        		int partOfSomeonesGroup = dp[n-1][k] * k; // part of someone elses group so that the combination
+        		// can be formed with anyone in the group i.e we multiply it by k
+
+        		dp[n][k] = selfGroup + partOfSomeonesGroup;
+    		}
+    	}
+    	return dp[N][K];
     }
 }
