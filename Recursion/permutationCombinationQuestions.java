@@ -41,7 +41,7 @@ public class permutationCombinationQuestions {
         return minCoins;
     }
 
-    // lc 46
+    // lc 46 Permutations
     public List<List<Integer>> permute(int[] nums) {
         List<Integer> asf = new ArrayList<>();
         List<List<Integer>> ans = new ArrayList<>();
@@ -71,7 +71,7 @@ public class permutationCombinationQuestions {
         return count;
     }
 
-    // lc47
+    // lc47 permutation with only unique elements
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> smallAns = new ArrayList<>();
@@ -88,7 +88,7 @@ public class permutationCombinationQuestions {
             return 1;
         }
 
-        int count = 0, prev = -12;
+        int count = 0, prev = -12; // to maintain uniqueness will maintain prev ptr
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] > -11 && prev != arr[i]) {
                 int val = arr[i];
@@ -103,7 +103,7 @@ public class permutationCombinationQuestions {
         return count;
     }
 
-    // lc39
+    // lc39 Combination Sum
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> ans = new ArrayList<>();
         List<Integer> asf = new ArrayList<>();

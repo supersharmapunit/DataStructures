@@ -12,6 +12,11 @@ Steps to go from RECURSION -> MEMOIZATION -> TABULATION
 6. Tabulation
 7. Optimization
 
+
+// https://leetcode.com/discuss/general-discussion/458695/dynamic-programming-patterns (DP Pattern)
+// https://leetcode.com/discuss/general-discussion/662866/Dynamic-Programming-for-Practice-Problems-Patterns-and-Sample-Solutions (Dp pattern wise questions)
+// https://seanprashad.com/leetcode-patterns/
+
 */
 public class Questions {
 
