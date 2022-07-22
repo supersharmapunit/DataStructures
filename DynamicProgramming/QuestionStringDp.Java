@@ -2,7 +2,7 @@
 // https://leetcode.com/discuss/general-discussion/662866/Dynamic-Programming-for-Practice-Problems-Patterns-and-Sample-Solutions (Dp pattern wise questions)
 // https://seanprashad.com/leetcode-patterns/
 
-// in most of the string question first think about what will happen if Si == Sj && Si != Sj
+_Memo// in most of the string question first think about what will happen if Si == Sj && Si != Sj
 // here Si means character at idx i and likewise
 
 // loop patterns =>
@@ -114,10 +114,10 @@ public class QuestionStringDp{
         if(n < m) return 0;
         int[][] dp = new int[n+1][m+1];
         for(int[] ele : dp) Arrays.fill(ele, -1);
-        return numDist(s,t,n,m,dp);
+        return numDist_Memo(s,t,n,m,dp);
     }
     // eg-> geeksforgeeks|gks (recursive tree)
-    public int numDist(String s1, String s2, int n, int m, int[][] dp){
+    public int numDist_Memo(String s1, String s2, int n, int m, int[][] dp){
         if(m == 0){
             return dp[n][m] = 1; // geeks|gks
         }
@@ -132,13 +132,43 @@ public class QuestionStringDp{
         
         // call are same as lcs but written before assigning it to a variable because there's only
         // 2 types of call in this ques and we had to add them so it's better to get the answer first and add later
-        int call1 = numDist(s1,s2,n-1,m-1,dp); // same and picked
-        int call2 = numDist(s1,s2, n-1,m,dp); // distinct
+        int call1 = numDist_Memo(s1,s2,n-1,m-1,dp); // same and picked
+        int call2 = numDist_Memo(s1,s2, n-1,m,dp); // distinct
 
         if(ch1 == ch2){
             return dp[n][m] = call1 + call2;
         } else {
             return dp[n][m] = call2;
         }
+    }
+
+    public int numDist_Tab(String s1, String s2, int N, int M, int[][] dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(m == 0){
+                    dp[n][m] = 1; // geeks|gks
+                    continue;
+                }
+                
+                if(n < m){
+                    dp[n][m] = 0; // ks|gks
+                    continue;
+                }
+                
+                char ch1 = s1.charAt(n-1), ch2 = s2.charAt(m-1);
+                
+                // call are same as lcs but written before assigning it to a variable because there's only
+                // 2 types of call in this ques and we had to add them so it's better to get the answer first and add later
+                int call1 = dp[n-1][m-1]; //numDist_Memo(s1,s2,n-1,m-1,dp); // same and picked
+                int call2 = dp[n-1][m];//numDist_Memo(s1,s2, n-1,m,dp); // distinct
+        
+                if(ch1 == ch2){
+                    dp[n][m] = call1 + call2;
+                } else {
+                    dp[n][m] = call2;
+                }
+            }
+        }
+        return dp[N][M];
     }
 }
