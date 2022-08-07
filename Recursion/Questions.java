@@ -64,8 +64,8 @@ public class Questions {
     }
 
     public static void display2D(int[][] arr) {
-        for (int ele : arr)
-            display1D(a);
+        for (int[] ele : arr)
+            display1D(ele);
 
         System.out.println();
     }

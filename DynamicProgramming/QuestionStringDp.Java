@@ -15,6 +15,8 @@ public class QuestionStringDp{
     public int longestPalindromeSubseq(String s) {
         if(s.length() == 1) return 1;
         else {
+
+            
             int n = s.length();
             int[][] dp = new int[n][n];
             return longestPalindromeSubseq_Memo(s, 0, n-1, dp);
@@ -52,7 +54,7 @@ public class QuestionStringDp{
                 if(ch1 == ch2){
                     dp[i][j] = dp[i+1][j-1]+2;
                     // return dp[i][j] = longestPalindromeSubseq_Memo(str, i+1, j-1, dp)+2; // if both char are equal so we take both(i.e +2)
-                    // and make call on rest of the string to give the answer eekske -> memo(eksk)+2e 
+                    // and make call on rest of the string to  give the answer eekske -> memo(eksk)+2e 
                 } else {
                     dp[i][j] = Math.max(dp[i+1][j], dp[i][j-1]);
                     // return dp[i][j] = Math.max(longestPalindromeSubseq_Memo(str, i+1, j, dp), longestPalindromeSubseq_Memo(str, i, j-1,dp)); // we take max of i+1,j && i, j-1
@@ -362,7 +364,7 @@ public class QuestionStringDp{
     public int maxDotProduct(int[] nums1, int[] nums2) {
         int n = nums1.length, m = nums2.length;
         int[][] dp = new int[n+1][m+1];
-        for(int[] d : dp)
+        for(int[] d : dp) //can skip this step in case of tabulation
             Arrays.fill(d, -(int)1e9);
         return maxDotProduct_Memo(nums1, nums2, n, m, dp);
     }
@@ -404,4 +406,46 @@ public class QuestionStringDp{
         for(int ele : arr) max = Math.max(ele, max);
         return max;
     }
+
+    // Leetcode 5 Longest Palindromic SUBSTRING
+    public void longestPalindromicSubstringBooleanMatrixFill(String str){
+        int n = str.length();
+        boolean[][] dp = new boolean[n][n];
+
+        for(int gap = 0; gap < n; gap++){
+            for(int i = 0, j = gap; j < n; i++, j++){
+                if(gap == 0) dp[i][j] = true;
+                else if(gap == 1 && str.charAt(i) == str.charAt(j)) dp[i][j] = true;
+                else dp[i][j] = str.charAt(i) == str.charAt(j) && dp[i+1][j-1];
+            }
+        }
+    }
+
+    // longest palindromic substring follow ups
+    // followup1 -> Total nuber of palindromic string
+    // followup2 -> Max Length of palindromic string
+    // followup3 -> return the substring that has max len palindromic string
+    public String lpsLeetcodeWithFollowups(String str){
+        int n = str.length(), count = 0, maxLen = 0, si = 0;
+        boolean[][] dp = new boolean[n][n];
+
+        for(int gap = 0; gap < n; gap++){
+            for(int i = 0, j = gap; j < n; i++, j++){
+                if(gap == 0) dp[i][j] = true;
+                else if(gap == 1 && str.charAt(i) == str.charAt(j)) dp[i][j] = true;
+                else dp[i][j] = str.charAt(i) == str.charAt(j) && dp[i+1][j-1];
+
+                if(dp[i][j]){
+                    count++; // followup1
+                    if(j-i+1 > maxLen){
+                        maxLen = j-i+1; // followup2
+                        si = i; // follow up 3 becoz if we have si and maxLen we can return that string
+                    }
+                }
+            }
+        }
+
+        return str.substring(si, si+maxLen);
+    }
+    
 }
