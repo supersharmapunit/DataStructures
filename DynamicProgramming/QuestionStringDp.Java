@@ -91,7 +91,7 @@ public class QuestionStringDp{
         }
     }
 
-    public int longestCommonSubsequence_Tab(){
+    public int longestCommonSubsequence_Tab(String str1, String str2, int n, int m, int[][] dp){
         for(int n = 0; n <= N; n++){
             for(int m = 0; m <= M; m++){
                 if(n == 0 || m == 0){
@@ -109,6 +109,14 @@ public class QuestionStringDp{
         }
         return dp[N][M];
     }
+
+    // Leetcode583 Delete operation for two strings
+    public int minDistance(String word1, String word2) {
+        int n = word1.length(), m = word2.length(), dp[][] = new int[n+1][m+1];
+        for(int d[] : dp) Arrays.fill(d,-1);
+        return n + m - 2*(longestCommonSubsequence_Memo(word1, word2, n, m, dp));
+    }Super@250120
+    
 
     // 115 Distinct Subsequence (just like lcs but with a twist)
     public int numDistinct(String s, String t) {
@@ -446,6 +454,90 @@ public class QuestionStringDp{
         }
 
         return str.substring(si, si+maxLen);
+    }
+
+    // Longest Common SUBSTRING -> Exactly similiar to LCSubsequence but the only differentiating factor is we'll not
+    // take Math.max here becoz we strictly need to choose a substring
+    // followup to find the substring that is common then we'll have the ei where that string ended so we'll subtract maxLen 
+    // from it to get the substring
+    public int longestCommonSUBSTRING(String str1, String str2, int N, int M, int[][] dp){
+        int maxLen = 0, ei = 0;
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(n == 0 || m == 0){
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if(str1.charAt(n-1) == str2.charAt(m-1)){
+                    dp[n][m] = dp[n-1][m-1] + 1;
+
+                    // maxLen = Math.max(maxLen, dp[n][m]);  cannot write like this when we have to find substring
+                    //  instead we write like this
+                    if(maxLen < dp[n][m]){
+                        ei = n+1;
+                        maxLen = dp[n][m];
+                    }
+                }
+            }
+        }
+        return maxLen;
+    }
+    
+    // leetcode 132 Palindrome Partitioning 2
+    // faith - where everver we find a palindrome apart from its size we'll make a cut and pass the rest
+    // of the string to get the minimum cut for it also add +1 for our cut
+    public int minCut(String str){
+        int n = str.length();
+
+        // first we'll fill a seperate dp of LPSubstring to check from where to where is
+        // palindrome is present
+        boolean[][] lps = new boolean[n][n];
+        for(int gap = 0; gap < n; gap++){
+            for(int r = 0, c = gap; c < n; r++, c++){
+                if(gap == 0)
+                    lps[r][c] = true;
+                else if(gap == 1 && str.charAt(r) == str.charAt(c))
+                    lps[r][c] = true;
+                else
+                    lps[r][c] = str.charAt(r) == str.charAt(c) && lps[r+1][c-1];
+            }
+        }
+
+        int dp[] = new int[n+1];
+        Arrays.fill(dp, -1);
+        return minCut_Tab(str, lps, 0, n-1, dp);
+    }
+
+    public int minCut_Memo(String str, boolean[][] lps, int si, int ei, int[] dp){
+        if(lps[si][ei]) return 0; // no palindrome means no cut
+        if(dp[si] != -1) return dp[si];
+
+        int minimumCuts = (int)1e8;
+        for(int cut = si; cut <= ei; cut++){
+            if(lps[si][cut])
+                minimumCuts = Math.min(minimumCuts, minCut_Memo(str, lps, cut+1, ei, dp)+1);
+        }
+
+        return dp[si] = minimumCuts;
+    }
+
+    public int minCut_Tab(String str, boolean[][] lps, int SI, int ei, int[] dp){
+        for(int si = 0; si <= SI; si++){
+            if(lps[si][ei]){
+                // no palindrome means no cut
+                dp[si] = 0;
+            }
+
+            int minimumCuts = (int)1e8;
+            for(int cut = si; cut <= ei; cut++){
+                if(lps[si][cut])
+                    minCut = Math.max(minimumCuts, dp[cut+1]);
+            }
+
+            dp[si] = minimumCuts;
+        }
+        return dp[SI];
     }
     
 }
