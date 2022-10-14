@@ -127,6 +127,24 @@ public class QueenSeries {
         return count;
     }
 
+    public static int nQueens01CombinationSubSequenceMethod(boolean[][] boxes, int tnq, int idx, String ans) {
+        int count = 0, n = boxes.length, m = boxes[0].length;
+        if (tnq == 0 || idx == n * m) {
+            if (tnq == 0)
+                System.out.println(ans);
+            return tnq == 0 ? 1 : 0;
+        }
+
+        int r = idx / m, c = idx % m;
+        if (isSafe(boxes, r, c)) {
+            boxes[r][c] = true;
+            count += nQueens01CombinationSubSequenceMethod(boxes, tnq - 1, idx + 1, ans + "(" + r + "," + c + ") ");
+            boxes[r][c] = false;
+        }
+        count += nQueens01CombinationSubSequenceMethod(boxes, tnq, idx + 1, ans);
+        return count;
+    }
+
     public static boolean isSafe(boolean chess[][], int row, int col) {
         int n = chess.length, m = chess[0].length;
 
@@ -173,7 +191,26 @@ public class QueenSeries {
         return count;
     }
 
-    // optimizing nQueen through optimizing it's isSafe fn through Shadow/BranchAndBound Technique
+    public static int nQueens01PermutationSubSequenceMethod(boolean[][] boxes, int tnq, int idx, String ans) {
+        int count = 0, n = boxes.length, m = boxes[0].length;
+        if (tnq == 0 || idx == n * m) {
+            if (tnq == 0)
+                System.out.println(ans);
+            return tnq == 0 ? 1 : 0;
+        }
+
+        int r = idx / m, c = idx % m;
+        if (isSafe(boxes, r, c) && !boxes[r][c]) {
+            boxes[r][c] = true;
+            count += nQueens01PermutationSubSequenceMethod(boxes, tnq - 1, 0, ans + "(" + r + "," + c + ") ");
+            boxes[r][c] = false;
+        }
+        count += nQueens01PermutationSubSequenceMethod(boxes, tnq, idx + 1, ans);
+        return count;
+    }
+
+    // optimizing nQueen through optimizing it's isSafe fn through
+    // Shadow/BranchAndBound Technique
     // gfg submission -
     // https://practice.geeksforgeeks.org/problems/n-queen-problem0315/0
     private static boolean[] row;
@@ -181,7 +218,7 @@ public class QueenSeries {
     private static boolean[] diagonal;
     private static boolean[] aDiagonal;
 
-    public ArrayList<ArrayList<Integer>> ArrayList<ArrayList<Integer>> nQueen(int n) {
+    public ArrayList<ArrayList<Integer>> nQueenisSafeOpti(int n) {
         int m = n;
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
         ArrayList<Integer> asf = new ArrayList<>();
@@ -191,12 +228,12 @@ public class QueenSeries {
         diagonal = new boolean[n + m - 1];
         aDiagonal = new boolean[n + m - 1];
 
-        nQueen(n, m, n, 0, ans, asf);
+        nQueenCombinationisSafeOpti(n, m, n, 0, ans, asf);
 
         return ans;
     }
 
-    private int nQueen(int n, int m, int tnq, int idx, ArrayList<ArrayList<Integer>> ans,
+    private int nQueenCombinationisSafeOpti(int n, int m, int tnq, int idx, ArrayList<ArrayList<Integer>> ans,
             ArrayList<Integer> asf) {
         if (tnq == 0) {
             ArrayList<Integer> base = new ArrayList<>(asf);
@@ -211,11 +248,86 @@ public class QueenSeries {
             if (!row[r] && !col[c] && !diagonal[r + c] && !aDiagonal[r - c + m - 1]) {
                 row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = true;
                 asf.add(c + 1);
-                count += nQueen(n, m, tnq - 1, i + 1, ans, asf);
+                count += nQueenCombinationisSafeOpti(n, m, tnq - 1, i + 1, ans, asf);
                 asf.remove(asf.size() - 1);
                 row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = false;
             }
         }
+        return count;
+    }
+
+    private int nQueenCombinationSubseQuenceisSafeOpti(int n, int m, int tnq, int idx,
+            ArrayList<ArrayList<Integer>> ans, ArrayList<Integer> asf) {
+        int count = 0;
+        if (tnq == 0 || idx == n * m) {
+            if (tnq == 0) {
+                ArrayList<Integer> base = new ArrayList<>(asf);
+                ans.add(base);
+                return 1;
+            }
+            return 0;
+        }
+
+        int r = idx / m, c = idx % m;
+
+        if (!row[r] && !col[c] && !diagonal[r + c] && !aDiagonal[r - c + m - 1]) {
+            row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = true;
+            asf.add(c + 1);
+            count += nQueenCombinationSubseQuenceisSafeOpti(n, m, tnq - 1, idx + 1, ans, asf);
+            asf.remove(asf.size() - 1);
+            row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = false;
+        }
+        count += nQueenCombinationSubseQuenceisSafeOpti(n, m, tnq, idx + 1, ans, asf);
+
+        return count;
+    }
+
+    privte int nQueenPermutationIsSafeOpti(int n, int m, int tnq, int idx,
+            ArrayList<ArrayList<Integer>> ans, ArrayList<Integer> asf){
+            if (tnq == 0) {
+                ArrayList<Integer> base = new ArrayList<>(asf);
+                ans.add(base);
+                return 1;
+        }
+
+        int count = 0;
+        for (int i = idx; i < n * m; i++) {
+            int r = i / m, c = i % m;
+
+            if (!row[r] && !col[c] && !diagonal[r + c] && !aDiagonal[r - c + m - 1]) {
+                row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = true;
+                asf.add(c + 1);
+                count += nQueenPermutationIsSafeOpti(n, m, tnq - 1, 0, ans, asf); // just changed idx here with 0
+                asf.remove(asf.size() - 1);
+                row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = false;
+            }
+        }
+        return count;
+            }
+
+    private int nQueenPermutationSubsequenceIsSafeOpti(int n, int m, int tnq, int idx,
+            ArrayList<ArrayList<Integer>> ans, ArrayList<Integer> asf){
+        int count = 0;
+        if (tnq == 0 || idx == n * m) {
+            if (tnq == 0) {
+                ArrayList<Integer> base = new ArrayList<>(asf);
+                ans.add(base);
+                return 1;
+            }
+            return 0;
+        }
+
+        int r = idx / m, c = idx % m;
+
+        if (!row[r] && !col[c] && !diagonal[r + c] && !aDiagonal[r - c + m - 1]) {
+            row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = true;
+            asf.add(c + 1);
+            count += nQueenPermutationSubsequenceIsSafeOpti(n, m, tnq - 1, 0, ans, asf); //just changed here idx to = 0
+            asf.remove(asf.size() - 1);
+            row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = false;
+        }
+        count += nQueenPermutationSubsequenceIsSafeOpti(n, m, tnq, idx + 1, ans, asf);
+
         return count;
     }
 
@@ -324,7 +436,7 @@ public class QueenSeries {
     static String str1 = "send", str2 = "more", str3 = "money";
     static boolean[] isNumUsed = new boolean[10];
     static int[] mapping = new int[26];
-    
+
     public static void crypto() {
         String str = str1 + str2 + str3;
         int[] freq = new int[26];
