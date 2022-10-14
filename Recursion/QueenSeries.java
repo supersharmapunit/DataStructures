@@ -173,6 +173,52 @@ public class QueenSeries {
         return count;
     }
 
+    // optimizing nQueen through optimizing it's isSafe fn through Shadow/BranchAndBound Technique
+    // gfg submission -
+    // https://practice.geeksforgeeks.org/problems/n-queen-problem0315/0
+    private static boolean[] row;
+    private static boolean[] col;
+    private static boolean[] diagonal;
+    private static boolean[] aDiagonal;
+
+    public ArrayList<ArrayList<Integer>> ArrayList<ArrayList<Integer>> nQueen(int n) {
+        int m = n;
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        ArrayList<Integer> asf = new ArrayList<>();
+
+        row = new boolean[n];
+        col = new boolean[m];
+        diagonal = new boolean[n + m - 1];
+        aDiagonal = new boolean[n + m - 1];
+
+        nQueen(n, m, n, 0, ans, asf);
+
+        return ans;
+    }
+
+    private int nQueen(int n, int m, int tnq, int idx, ArrayList<ArrayList<Integer>> ans,
+            ArrayList<Integer> asf) {
+        if (tnq == 0) {
+            ArrayList<Integer> base = new ArrayList<>(asf);
+            ans.add(base);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = idx; i < n * m; i++) {
+            int r = i / m, c = i % m;
+
+            if (!row[r] && !col[c] && !diagonal[r + c] && !aDiagonal[r - c + m - 1]) {
+                row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = true;
+                asf.add(c + 1);
+                count += nQueen(n, m, tnq - 1, i + 1, ans, asf);
+                asf.remove(asf.size() - 1);
+                row[r] = col[c] = diagonal[r + c] = aDiagonal[r - c + m - 1] = false;
+            }
+        }
+        return count;
+    }
+
     // lc37 suduko solver(this is not optimized we can optimize it by using bits)
     public void solveSudoku(char[][] board) {
         int m = board.length; // m*m board

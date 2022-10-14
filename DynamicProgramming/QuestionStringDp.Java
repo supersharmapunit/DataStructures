@@ -510,7 +510,7 @@ public class QuestionStringDp{
     }
 
     public int minCut_Memo(String str, boolean[][] lps, int si, int ei, int[] dp){
-        if(lps[si][ei]) return 0; // no palindrome means no cut
+        if(lps[si][ei]) return 0; // already a palindrome, no need to cut to make a palindrom
         if(dp[si] != -1) return dp[si];
 
         int minimumCuts = (int)1e8;
@@ -538,6 +538,28 @@ public class QuestionStringDp{
             dp[si] = minimumCuts;
         }
         return dp[SI];
+    }
+
+    // count subsequence in form of a^i b^j c^k
+    //  out of all subsequences we had to count the number of subsequences that are in the given order
+    //  like aaaabbccc (i numbers of a followed by j numbers of b followed by k numbers or c) we can ignore all other
+    // subsequences
+    public int countSubsequence(String s){
+        int n = s.length();
+        long emptyCount = 1, aCount = 0, bCount = 0, cCount = 0, mod = (long)1e9+7;
+
+        for(int i = 0; i < n; i++){
+            char ch = s.charAt(i);
+
+            if(ch == 'a')
+                aCount = aCount + (aCount + emptyCount) % mod;
+            else if(ch == 'b')
+                bCount = bCount + (aCount + bCount) % mod;
+            else
+                cCount = cCount + (bCount + cCount) % mod;
+        }
+
+        return (int)(cCount % mod);
     }
     
 }
