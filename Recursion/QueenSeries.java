@@ -331,6 +331,64 @@ public class QueenSeries {
         return count;
     }
 
+    // further optimizing nQueen through optimizing it's recursive calls
+    // submitted on LC nQueen-II
+    private int nQueenCombinationIsSafeNRecOpti(int n, int m, int tnq,int sr,List<List<String>> ans, List<String> asf){
+        if(tnq == 0){
+            List<String> base = new ArrayList<>(asf);
+            ans.add(base);
+            return 1;
+        }
+        
+        int count = 0;
+        for(int sc = 0; sc < m; sc++){
+            
+            if(!row[sr] && !col[sc] && !diagonal[sr+sc] && !aDiagonal[sr-sc+m-1]){
+                row[sr] = col[sc] = diagonal[sr+sc] = aDiagonal[sr-sc+m-1] = true;
+                String sasf = "";
+                for(int s = 0; s < m; s++){
+                    if(s == sc) sasf += "Q";
+                    else sasf += ".";
+                }
+                asf.add(sasf);
+                count += nQueenCombinationIsSafeNRecOpti(n,m,tnq-1,sr+1,ans,asf);
+                asf.remove(asf.size()-1);
+                row[sr] = col[sc] = diagonal[sr+sc] = aDiagonal[sr-sc+m-1] = false;
+            }
+        }
+        return count;
+    }
+
+    private int nQueenPermutationIsSafeNRecOpti(int n, int m, int tnq,int sr,List<List<String>> ans, List<String> asf){
+        if(tnq == 0 || sr == n){
+            if(tnq == 0){
+                List<String> base = new ArrayList<>(asf);
+                ans.add(base);
+            }
+            
+            return tnq == 0 ? 1 : 0;
+        }
+        
+        int count = 0;
+        for(int sc = 0; sc < m; sc++){
+            
+            if(!row[sr] && !col[sc] && !diagonal[sr+sc] && !aDiagonal[sr-sc+m-1]){
+                row[sr] = col[sc] = diagonal[sr+sc] = aDiagonal[sr-sc+m-1] = true;
+                String sasf = "";
+                for(int s = 0; s < m; s++){
+                    if(s == sc) sasf += "Q";
+                    else sasf += ".";
+                }
+                asf.add(sasf);
+                count += nQueenPermutationIsSafeNRecOpti(n,m,tnq-1,0,ans,asf);
+                asf.remove(asf.size()-1);
+                row[sr] = col[sc] = diagonal[sr+sc] = aDiagonal[sr-sc+m-1] = false;
+            }
+        }
+        count += nQueenPermutationIsSafeNRecOpti(n,m,tnq,sr+1,ans,asf);
+        return count;
+    }
+
     // lc37 suduko solver(this is not optimized we can optimize it by using bits)
     public void solveSudoku(char[][] board) {
         int m = board.length; // m*m board
